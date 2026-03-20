@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quartal4 Jobs – Karriere mit Restpfand</title>
+  <style>
+    :root {
+      --bg: #d8d0b8;
+      --paper: #f3ecd6;
+      --card: #efe5c8;
+      --border: #6a5f47;
+      --dark: #3f3728;
+      --accent: #7a5d2f;
+      --accent-2: #4f7a3c;
+      --warning: #8a3f2d;
+      --gold: #b08a37;
+      --shadow: rgba(0, 0, 0, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Verdana, Arial, sans-serif;
+      background:
+        linear-gradient(rgba(255,255,255,0.06), rgba(0,0,0,0.03)),
+        repeating-linear-gradient(
+          0deg,
+          #d4ccb2 0px,
+          #d4ccb2 18px,
+          #d8d0b8 18px,
+          #d8d0b8 36px
+        );
+      color: var(--dark);
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 20px auto;
+      padding: 0 14px 40px;
+    }
+
+    .topbar {
+      background: linear-gradient(#7b6a4a, #5f5239);
+      color: #f6f0de;
+      border: 2px solid #413826;
+      border-radius: 8px 8px 0 0;
+      padding: 14px 18px;
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+      text-shadow: 1px 1px 0 #2b2418;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #cabf9f;
+      border: 2px solid #413826;
+      border-top: 0;
+      padding: 10px;
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #fff8e8;
+      background: linear-gradient(#8f7440, #715a31);
+      border: 1px solid #46381d;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .nav a:hover {
+      filter: brightness(1.05);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 2px solid var(--border);
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+
+    .panel .hd {
+      background: linear-gradient(#8c7750, #6f5d3f);
+      color: #fff6df;
+      font-weight: bold;
+      padding: 9px 12px;
+      font-size: 14px;
+      border-bottom: 2px solid var(--border);
+      text-shadow: 1px 1px 0 #3a2f1f;
+    }
+
+    .panel .bd {
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #ddd1ae;
+      border: 1px solid #8b7d59;
+      padding: 4px 8px;
+      margin: 0 6px 6px 0;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .meter {
+      margin: 10px 0;
+    }
+
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .bar {
+      width: 100%;
+      height: 18px;
+      border: 1px solid #5a4f3b;
+      background: #d4c8a8;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(#7faa55, #587b38);
+    }
+
+    .fill.energy {
+      width: 82%;
+    }
+
+    .fill.hunger {
+      width: 61%;
+      background: linear-gradient(#c2a04d, #9e7b28);
+    }
+
+    .fill.smell {
+      width: 93%;
+      background: linear-gradient(#9b6748, #7f4f35);
+    }
+
+    .job-card {
+      background: var(--card);
+      border: 2px dashed #8b7757;
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .stamp {
+      position: absolute;
+      right: 14px;
+      top: 12px;
+      transform: rotate(-8deg);
+      border: 3px solid #8a3f2d;
+      color: #8a3f2d;
+      padding: 8px 10px;
+      font-weight: bold;
+      font-size: 12px;
+      background: rgba(255, 248, 232, 0.7);
+      letter-spacing: 1px;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin: 14px 0 12px;
+    }
+
+    .meta div {
+      background: #f7f0db;
+      border: 1px solid #ad9a73;
+      padding: 9px;
+      font-size: 13px;
+    }
+
+    ul {
+      margin-top: 8px;
+      padding-left: 20px;
+    }
+
+    .cta {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff7e4;
+      background: linear-gradient(#648b44, #4c6d32);
+      border: 1px solid #2e4a1e;
+      padding: 12px 16px;
+      border-radius: 5px;
+      font-weight: bold;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .cta:hover {
+      filter: brightness(1.06);
+    }
+
+    .small {
+      font-size: 12px;
+      color: #5b513d;
+    }
+
+    .ticker {
+      margin-top: 14px;
+      background: #4a3e2d;
+      color: #f9efcf;
+      border: 2px solid #2f261b;
+      padding: 8px 12px;
+      font-size: 13px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 18s linear infinite;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-120%); }
+    }
+
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #5d533f;
+    }
+
+    .note {
+      background: #f7edd0;
+      border: 1px solid #a79361;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 780px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stamp {
+        position: static;
+        display: inline-block;
+        transform: rotate(-3deg);
+        margin-bottom: 10px;
+      }
+
+      .topbar h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <h1>Quartal4 Jobs</h1>
+      <p>Deutschlands vermutlich seriösestes Karriereportal zwischen Parkbank, Pfandautomat und Product Quality Assurance.</p>
+    </header>
+
+    <nav class="nav">
+      <a href="#">Startseite</a>
+      <a href="#">Top-Jobs</a>
+      <a href="#">Fernarbeit</a>
+      <a href="#">Sinnkrisen mit Perspektive</a>
+      <a href="#">Über uns</a>
+    </nav>
+
+    <div class="ticker">
+      <span>🔥 Neu ausgeschrieben: Spieltester (m/w/d) für browsergame-inspiriertes Elends-Management · 3 offene Dosen = 1 Erfahrungspunkt · Kostenloser Kaffee nur nach erfolgreichem Bettelwurf</span>
+    </div>
+
+    <main class="layout">
+      <aside class="panel">
+        <div class="hd">Karriere-Status</div>
+        <div class="bd">
+          <div class="badge">Level 4 Bewerber</div>
+          <div class="badge">+2 Ausdauer</div>
+          <div class="badge">-1 Körpergeruch-Toleranz</div>
+
+          <div class="meter">
+            <div class="meter-label">
+              <span>Motivation</span>
+              <span>82%</span>
+            </div>
+            <div class="bar">
+              <div class="fill energy"></div>
+            </div>
+          </div>
+
+          <div class="meter">
+            <div class="meter-label">
+              <span>Koffeinpegel</span>
+              <span>61%</span>
+            </div>
+            <div class="bar">
+              <div class="fill hunger"></div>
+            </div>
+          </div>
+
+          <div class="meter">
+            <div class="meter-label">
+              <span>Bug-Spürnase</span>
+              <span>93%</span>
+            </div>
+            <div class="bar">
+              <div class="fill smell"></div>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>Tagesbonus:</strong><br />
+            Wer heute scrollt, erhält +5 Neugier und möglicherweise einen Arbeitsplatz mit fragwürdiger Würde.
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel">
+        <div class="hd">Aktuelle Stellenausschreibung</div>
+        <div class="bd">
+          <article class="job-card">
+            <div class="stamp">DRINGEND GESUCHT</div>
+            <h2>Spieletester (m/w/d) – Bereich „Pennergame“</h2>
+            <p>
+              Du hast einen scharfen Blick für kaputte Spielmechaniken, ein Herz für schäbigen 2009er Browsergame-Charme
+              und kannst ernst bleiben, wenn jemand beruflich auf Kartons schläft, Tauben verscheucht und mit Pfandflaschen
+              sein Imperium aufbaut? Dann könnte dies der Karrieresprung sein, den weder Berufsberater noch Eltern kommen sahen.
+            </p>
+
+            <div class="meta">
+              <div><strong>Unternehmen:</strong><br />Quartal4 Interactive Elendswerke GmbH</div>
+              <div><strong>Standort:</strong><br />Remote / Hinterhof / virtuelle Parkbank</div>
+              <div><strong>Arbeitszeit:</strong><br />Vollzeit, Teilzeit oder nachts am Pfandautomaten</div>
+              <div><strong>Vergütung:</strong><br />Marktüblich in Restmünzen und Anerkennung</div>
+            </div>
+
+            <h3>Deine Mission</h3>
+            <ul>
+              <li>Du testest Spielabläufe rund um Betteln, Pennen, Sammeln, Aufsteigen und sozial fragwürdige Karrierepfade.</li>
+              <li>Du prüfst, ob der virtuelle Kontostand korrekt steigt, wenn man mit maximaler Würdelosigkeit auf Beutezug geht.</li>
+              <li>Du dokumentierst Bugs wie ein Profi, z. B. „Taube verschwindet, aber beißt trotzdem“.</li>
+              <li>Du gibst Feedback zu Balancing, Witzigkeit, Frustfaktor und der wichtigen Frage: „Fühlt sich dieser Müllcontainer fair an?“</li>
+              <li>Du verifizierst, ob schäbige Upgrades genau die richtige Mischung aus hässlich, nutzlos und doch begehrenswert sind.</li>
+            </ul>
+
+            <h3>Das solltest du mitbringen</h3>
+            <ul>
+              <li>Leidensfähigkeit, Humor und idealerweise eine nostalgische Schwäche für Browsergames aus der goldenen Ära fragwürdiger Webseiten.</li>
+              <li>Ein Auge für kleine Zahlen, große Balken und Menüs, die aussehen, als hätten sie schon 2009 keinen Designpreis gewonnen.</li>
+              <li>Freude daran, Spielsysteme gründlich zu zerlegen, ohne dabei den ganzen Sperrmüll anzuzünden.</li>
+              <li>Erfahrung im Testen, QA, Gaming oder zumindest im kompromisslosen Klicken auf alles, was wie ein Button aussieht.</li>
+              <li>Textsicherheit bei Formulierungen wie: „Der Körpergeruchswert steigt nach Dosenbier unverhältnismäßig stark.“</li>
+            </ul>
+
+            <h3>Was dich erwartet</h3>
+            <ul>
+              <li>Ein Arbeitsplatz mit echtem Kultfaktor und bewusst schmuddeligem Retro-Flair.</li>
+              <li>Kurze Wege zwischen Idee, Bug und völlig überzogener Patchnote.</li>
+              <li>Ein Team, das weiß: Große Spiele entstehen nicht nur in Hochglanzbüros, sondern manchmal auch geistig auf einer Parkbank.</li>
+              <li>Kostenlose Heißgetränke, solange der Becher nicht aus dem Inventar geklaut wurde.</li>
+              <li>Die seltene Gelegenheit, beruflich Sätze zu sagen wie: „Das Betteln skaliert im Midgame zu aggressiv.“</li>
+            </ul>
+
+            <h3>Typische Testfälle</h3>
+            <ul>
+              <li>Bringt eine bessere Jacke wirklich mehr Respekt auf der Straße oder nur mehr Pixel-Schweiß?</li>
+              <li>Ist die Schlafmechanik fair oder wacht man grundlos ärmer, trauriger und mit einer Taube auf?</li>
+              <li>Erzeugt das Pfandsammeln genug Fortschrittsgefühl oder nur Rückenschmerzen in der Seele?</li>
+              <li>Funktioniert der Aufstieg vom Straßenrand zur legendären Gestalt des urbanen Überlebens nachvollziehbar?</li>
+            </ul>
+
+            <h3>Bewerbung</h3>
+            <p>
+              Schick uns deine Bewerbung, deinen frühestmöglichen Eintrittstermin und gern auch ein paar Worte dazu,
+              warum ausgerechnet du die nötige Mischung aus Präzision, Galgenhumor und digitalem Straßeninstinkt mitbringst.
+            </p>
+
+            <p>
+              <a class="cta" href="mailto:jobs@quartal4.de?subject=Bewerbung%20als%20Spieletester%20Pennergame">Jetzt auf diese Legenden-Stelle bewerben</a>
+            </p>
+
+            <p class="small">
+              Hinweis: Diese Anzeige ist satirisch gemeint und eine Hommage an den schrägen Charme klassischer deutscher Browsergames.
+              Keine echten Parkbänke wurden für diese Ausschreibung überbeansprucht.
+            </p>
+          </article>
+
+          <div class="note">
+            <strong>HR-Flurfunk:</strong> Bewerber mit sauber dokumentierten Bugs, dunklem Humor und Resistenz gegen schäbige UI-Rahmen
+            werden bevorzugt behandelt. Wer „2009er Internet“ nicht als Beleidigung versteht, ist sofort in der engeren Auswahl.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer">
+      © Quartal4 Jobs – Zwischen Nostalgie, Notgroschen und Qualitätsmanagement.
+    </div>
+  </div>
+</body>
+</html>
