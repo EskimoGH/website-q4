@@ -95,8 +95,24 @@ label{display:block;margin-top:10px;margin-bottom:4px;color:#a1a1aa}
 <label>Verkaufspreis pro Share (¢)</label><input id="sellPrice" type="number" step="0.01">
 <button class="btn btn-green" id="closeBtn" style="margin-top:12px">Trade schließen</button>
 </div></div>
+ 
+<footer style="margin-top:40px; padding:20px 0; border-top:1px solid #27272a; display:flex; justify-content:space-between; align-items:center; color:#a1a1aa; font-size:14px;">
+  <div>
+    © Polymarket Tracker
+  </div>
 
+  <div style="display:flex; gap:12px;">
+    <a href="https://polymarket.com/profile/0x21567d5FE9867E8c0B5BAE3A5cf5dd205190B23a" target="_blank" style="color:#a1a1aa; text-decoration:none;">
+      Polymarket
+    </a>
+    <a href="https://hashdive.com/Analyze_User?user_address=0x21567d5fe9867e8c0b5bae3a5cf5dd205190b23a" target="_blank" style="color:#a1a1aa; text-decoration:none;">
+      Hashdive
+    </a>
+  </div>
+</footer>
+ 
 <script type="module">
+ 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://zzvulfblktieryljafjl.supabase.co";
