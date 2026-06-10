@@ -47,6 +47,7 @@ label{display:block;margin-top:10px;margin-bottom:4px;color:#a1a1aa}
 <div class="card stat"><div class="muted">Total Profit</div><div id="profit" class="big">$0.00</div></div>
 <div class="card stat"><div class="muted">Open Trades</div><div id="open" class="big">0</div></div>
 <div class="card stat"><div class="muted">Closed Trades</div><div id="closed" class="big">0</div></div>
+<div class="card stat"><div class="muted">Startkapital</div><div id="start" class="big">$100.00</div></div>
 </div>
 
 <div class="card chart-card"><canvas id="equityChart"></canvas></div>
@@ -106,6 +107,10 @@ let chart=null, selected=null;
 
 const addModal=document.getElementById("addModal");
 const closeModal=document.getElementById("closeModal");
+document.getElementById("start").innerText =
+  "$" + START_CAPITAL.toFixed(2);
+
+const START_CAPITAL = 100;
 
 document.getElementById("addBtn").onclick=()=>addModal.style.display="flex";
 
@@ -121,7 +126,7 @@ async function load(){
  const search=document.getElementById("search").value.toLowerCase();
  const filter=document.getElementById("filter").value;
 
- let runningBalance=0;
+let runningBalance = START_CAPITAL;
  const sorted=[...data].filter(t=>t.status==="closed")
  .sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
 
