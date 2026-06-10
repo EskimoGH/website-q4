@@ -103,14 +103,14 @@ const SUPABASE_URL = "https://zzvulfblktieryljafjl.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6dnVsZmJsa3RpZXJ5bGphZmpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwODYwMTgsImV4cCI6MjA5NjY2MjAxOH0.FSvmZxvwISmBuYkrIoJ8toIqp5pVh1rsA4xP6UdSBQo";
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 
+const START_CAPITAL = 100;
+
 let chart=null, selected=null;
 
 const addModal=document.getElementById("addModal");
 const closeModal=document.getElementById("closeModal");
-document.getElementById("start").innerText =
-  "$" + START_CAPITAL.toFixed(2);
 
-const START_CAPITAL = 100;
+document.getElementById("start").innerText ="$" + START_CAPITAL.toFixed(2);
 
 document.getElementById("addBtn").onclick=()=>addModal.style.display="flex";
 
