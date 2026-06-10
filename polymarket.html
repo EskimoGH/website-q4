@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Quartal4 Polymarket Tracker</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+padding:25px;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+h1{
+font-size:32px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+}
+
+.btn{
+border:none;
+padding:12px 18px;
+border-radius:12px;
+cursor:pointer;
+font-size:16px;
+}
+
+.add{
+background:#22c55e;
+color:white;
+font-size:22px;
+}
+
+.export{
+background:#334155;
+color:white;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+margin-bottom:25px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:16px;
+}
+
+.card h3{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:8px;
+}
+
+.card span{
+font-size:28px;
+font-weight:bold;
+}
+
+.table-wrapper{
+overflow:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1e293b;
+border-radius:16px;
+overflow:hidden;
+}
+
+th{
+background:#334155;
+padding:15px;
+text-align:left;
+}
+
+td{
+padding:15px;
+border-bottom:1px solid #475569;
+}
+
+tr:hover{
+background:#2a3648;
+cursor:pointer;
+}
+
+.open{
+color:#facc15;
+font-weight:bold;
+}
+
+.closed{
+color:#22c55e;
+font-weight:bold;
+}
+
+.profit{
+color:#22c55e;
+font-weight:bold;
+}
+
+.loss{
+color:#ef4444;
+font-weight:bold;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+justify-content:center;
+align-items:center;
+}
+
+.modal-content{
+background:#1e293b;
+padding:25px;
+border-radius:16px;
+width:400px;
+max-width:95%;
+}
+
+.modal-content h2{
+margin-bottom:15px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+background:#334155;
+color:white;
+}
+
+.modal-content button{
+width:100%;
+padding:12px;
+border:none;
+background:#22c55e;
+color:white;
+border-radius:10px;
+cursor:pointer;
+}
+
+select{
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>📈 Quartal4 Polymarket Tracker</h1>
+
+<div class="actions">
+
+<button class="btn export" onclick="exportCSV()">
+CSV Export
+</button>
+
+<button class="btn add" onclick="showAddModal()">
++
+</button>
+
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="card">
+<h3>Gesamtgewinn</h3>
+<span id="profitTotal">$0</span>
+</div>
+
+<div class="card">
+<h3>ROI</h3>
+<span id="roi">0%</span>
+</div>
+
+<div class="card">
+<h3>Offene Trades</h3>
+<span id="openCount">0</span>
+</div>
+
+<div class="card">
+<h3>Geschlossene Trades</h3>
+<span id="closedCount">0</span>
+</div>
+
+</div>
+
+<select id="filter" onchange="loadTrades()">
+<option value="all">Alle</option>
+<option value="open">Offen</option>
+<option value="closed">Geschlossen</option>
+</select>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Wette</th>
+<th>Einsatz</th>
+<th>Kauf</th>
+<th>Verkauf</th>
+<th>Gewinn $</th>
+<th>Gewinn %</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="modal" id="addModal">
+<div class="modal-content">
+
+<h2>Neue Wette</h2>
+
+<input id="tradeName" placeholder="Name der Wette">
+<input id="stake" type="number" placeholder="Einsatz">
+<input id="buyPrice" type="number" step="0.01" placeholder="Preis pro Share">
+<input id="payout" type="number" placeholder="Auszahlung bei Erfolg">
+
+<button onclick="addTrade()">
+Speichern
+</button>
+
+</div>
+</div>
+
+<div class="modal" id="closeModal">
+<div class="modal-content">
+
+<h2>Trade schließen</h2>
+
+<input id="sellPrice" type="number" step="0.01">
+
+<button onclick="closeTrade()">
+Abschließen
+</button>
+
+</div>
+</div>
+
+<script>
+
+const SUPABASE_URL = "https://zzvulfblktieryljafjl.supabase.co/rest/v1/";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6dnVsZmJsa3RpZXJ5bGphZmpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwODYwMTgsImV4cCI6MjA5NjY2MjAxOH0.FSvmZxvwISmBuYkrIoJ8toIqp5pVh1rsA4xP6UdSBQo";
+
+const supabase =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+let currentTrade=null;
+
+function showAddModal(){
+document.getElementById("addModal").style.display="flex";
+}
+
+async function addTrade(){
+
+await supabase
+.from("polymarket_trades")
+.insert([{
+trade_name:tradeName.value,
+stake:Number(stake.value),
+buy_price:Number(buyPrice.value),
+payout_if_win:Number(payout.value),
+status:"open"
+}]);
+
+document.getElementById("addModal").style.display="none";
+
+loadTrades();
+
+}
+
+async function loadTrades(){
+
+const {data} =
+await supabase
+.from("polymarket_trades")
+.select("*")
+.order("created_at",{ascending:false});
+
+const filter =
+document.getElementById("filter").value;
+
+const tbody =
+document.getElementById("tableBody");
+
+tbody.innerHTML="";
+
+let profit=0;
+let stakeTotal=0;
+let open=0;
+let closed=0;
+
+data.forEach(trade=>{
+
+if(filter!=="all" &&
+trade.status!==filter)
+return;
+
+if(trade.status==="open") open++;
+if(trade.status==="closed") closed++;
+
+profit += Number(trade.profit_dollar || 0);
+stakeTotal += Number(trade.stake);
+
+const row=document.createElement("tr");
+
+row.innerHTML=`
+<td>${trade.trade_name}</td>
+<td>$${trade.stake}</td>
+<td>${trade.buy_price}</td>
+<td>${trade.sell_price ?? "-"}</td>
+<td class="${trade.profit_dollar >=0 ? "profit":"loss"}">
+${trade.profit_dollar ?? "-"}
+</td>
+<td class="${trade.profit_percent >=0 ? "profit":"loss"}">
+${trade.profit_percent ?? "-"}
+</td>
+<td class="${trade.status}">
+${trade.status}
+</td>
+`;
+
+if(trade.status==="open"){
+
+row.onclick=()=>{
+
+currentTrade=trade;
+
+document.getElementById(
+"closeModal"
+).style.display="flex";
+
+};
+
+}
+
+tbody.appendChild(row);
+
+});
+
+document.getElementById(
+"profitTotal"
+).innerText=
+"$"+profit.toFixed(2);
+
+document.getElementById(
+"roi"
+).innerText=
+stakeTotal
+? ((profit/stakeTotal)*100).toFixed(2)+"%"
+: "0%";
+
+document.getElementById(
+"openCount"
+).innerText=open;
+
+document.getElementById(
+"closedCount"
+).innerText=closed;
+
+}
+
+async function closeTrade(){
+
+const sell=
+Number(
+document.getElementById(
+"sellPrice"
+).value
+);
+
+const profitDollar =
+currentTrade.stake *
+((sell/currentTrade.buy_price)-1);
+
+const profitPercent =
+((sell/currentTrade.buy_price)-1)*100;
+
+await supabase
+.from("polymarket_trades")
+.update({
+
+sell_price:sell,
+
+profit_dollar:
+profitDollar.toFixed(2),
+
+profit_percent:
+profitPercent.toFixed(2),
+
+status:"closed"
+
+})
+.eq("id",currentTrade.id);
+
+document.getElementById(
+"closeModal"
+).style.display="none";
+
+loadTrades();
+
+}
+
+async function exportCSV(){
+
+const {data} =
+await supabase
+.from("polymarket_trades")
+.select("*");
+
+let csv =
+"Name,Einsatz,Kauf,Verkauf,GewinnDollar,GewinnProzent,Status\n";
+
+data.forEach(t=>{
+
+csv +=
+`${t.trade_name},${t.stake},${t.buy_price},${t.sell_price ?? ""},${t.profit_dollar ?? ""},${t.profit_percent ?? ""},${t.status}\n`;
+
+});
+
+const blob =
+new Blob([csv],{
+type:"text/csv"
+});
+
+const url =
+URL.createObjectURL(blob);
+
+const a =
+document.createElement("a");
+
+a.href=url;
+a.download="polymarket.csv";
+a.click();
+
+}
+
+loadTrades();
+
+</script>
+
+</body>
+</html>
