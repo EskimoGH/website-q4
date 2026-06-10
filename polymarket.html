@@ -188,7 +188,7 @@ let runningBalance = START_CAPITAL;
  chart=new Chart(ctx,{
   type:"line",
   data:{labels,datasets:[{label:"Balance over Time",data:curve}]},
-  options:{responsive:true,maintainAspectRatio:false}
+  options:{responsive:true,maintainAspectRatio:false, scales: {y: {suggestedMin: 0}}}
  });
 }
 
